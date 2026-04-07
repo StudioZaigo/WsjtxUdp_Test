@@ -26,8 +26,6 @@ object Form1: TForm1
       'Memo1')
     ScrollBars = ssBoth
     TabOrder = 0
-    ExplicitWidth = 484
-    ExplicitHeight = 681
   end
   object Panel1: TPanel
     Left = 476
@@ -37,8 +35,6 @@ object Form1: TForm1
     Align = alRight
     Caption = 'Panel1'
     TabOrder = 1
-    ExplicitLeft = 264
-    ExplicitHeight = 691
     object Button1: TButton
       Left = 14
       Top = 16

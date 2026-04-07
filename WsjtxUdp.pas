@@ -152,6 +152,7 @@ type
     FWSJTXStoppedHeartbeatMessage:  TWSJTXStoppedHeartbeatMessage;
     FOmitDuplicate: boolean;
     FHexMessageEnable: boolean;
+    FActive: boolean;
 
     procedure SetIpAddress(const Value: string);
     procedure SetPort(const Value: TIdPort);
@@ -189,6 +190,7 @@ type
     function ReadUInt8(const Bytes: TBytes; var Pos: Integer): byte;
     procedure SetOmitDuplicate(const Value: boolean);
     procedure SetHexMessageEnable(const Value: boolean);
+    procedure setFActive(const Value: boolean);
 //    procedure setFActive(const Value: boolean);
 
   public
@@ -217,9 +219,8 @@ type
     property HexMessageEnable: boolean read FHexMessageEnable write SetHexMessageEnable;
     property HexMessage: string read FHexMessage;
     property HeartbeatTimeout: Cardinal read FHeartbeatTimeout write SetHeartbeatTimeout;
-//    property Active: boolean read FActive write setFActive;
+    property Active: boolean read FActive write setFActive;
 
-    property IpAddress: string read FIpAddress write SetIpAddress;
     Property Port: TIdPort read FPort write SetPort;    // TIdPort is a Word (2-digit integer type)
 
     procedure Open(); overload;
@@ -716,11 +717,6 @@ begin
   n := length(Bytes);
   if pos + 4 + Len > n  then
     begin
-//    ShowMessage('ReadString Bytes length overflow');
-    s := MessToHex(Bytes);
-    ShowMessage('Bytes:' + s + sLineBreak
-          + ' Length:' + IntTostr(n) + ' Pos:' + IntTostr(Pos) + ' Len:' + IntTostr(Len));
-
     result := '';
     exit;
     end;
@@ -831,10 +827,11 @@ begin
   result := int8(v);
 end;
 
-//procedure TWsjtxUdp.setFActive(const Value: boolean);
-//begin
-//  FActive := Value;
-//end;
+procedure TWsjtxUdp.setFActive(const Value: boolean);
+begin
+  FActive := Value;
+end;
+
 
 function TWsjtxUdp.ReadFloatBE(const Bytes: TBytes; var Pos: Integer): Single;
 var

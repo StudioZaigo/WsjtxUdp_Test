@@ -226,7 +226,7 @@ procedure TForm1.RecvStoppedHeartbeatMessage(Sender: tObject);
 begin
   with WSjtxUdp.WSJTXStoppedHeartbeatMessage do
     begin
-     Winapi.Windows.Beep(523,300);    // Play the note C for 300ms.
+     Winapi.Windows.Beep(523,1000);    // Play the note C for 1000ms.
   end;
 
   Button2Click(Button2);
