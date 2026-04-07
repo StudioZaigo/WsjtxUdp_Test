@@ -23,9 +23,9 @@ Delphi で扱いやすい形式に変換するためのクラスです。
 | 1 | `TWSJTXStatusMessage` | Status |
 | 2 | `TWSJTXDecodeMessage` | Decode |
 | 3 | `TWSJTXClearMessage` | Clear |
+| 5 | `TWSJTXQSOLoggedMessage` | QSO Logged |
 | 6 | `TWSJTXCloseMessage` | Close |
 | 12 | `TWSJTXLoggedADIFMessage` | Logged ADIF |
-| 50 | `TWSJTXQSOLoggedMessage` | QSO Logged |
 | — | `FWSJTXStoppedHeartbeatMessage` | Heartbeat 停止通知 |
 
 > 基本的には WSJT-X のメッセージ形式に準拠していますが、  
@@ -86,4 +86,4 @@ Delphi で扱いやすい形式に変換するためのクラスです。
 
 ## 📜 License
 
-（必要に応じて MIT / BSD / Apache などを記載）
+ MIT
