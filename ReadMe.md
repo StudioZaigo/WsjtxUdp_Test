@@ -87,3 +87,9 @@ Delphi で扱いやすい形式に変換するためのクラスです。
 ## 📜 License
 
  MIT
+
+- Open Source Initiative OSI - The MIT License:Licensing - 原文        https://opensource.org/license/mit
+
+- The MIT License:Licensing (GitHub) - オープンソースグループ・ジャパンによる日本語参考訳     https://licenses.opensource.jp/MIT/MIT.html
+
+
