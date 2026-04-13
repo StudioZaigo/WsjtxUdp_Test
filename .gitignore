@@ -99,6 +99,7 @@ udf/
 *.dat
 *.conf
 *.msg
+*.vlb
 
 
 
