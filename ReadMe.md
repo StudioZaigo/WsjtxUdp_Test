@@ -103,6 +103,3 @@ Delphi で扱いやすい形式に変換するためのクラスです。
 Open Source Initiative OSI - The MIT License:Licensing - 原文        https://opensource.org/license/mit
 The MIT License:Licensing (GitHub) - オープンソースグループ・ジャパンによる日本語参考訳     https://licenses.opensource.jp/MIT/MIT.html
 
-##　test
->>>>>>> 76fac4b719f4612d1d707ee2576bd37c72a5282c
-
