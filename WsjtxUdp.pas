@@ -27,7 +27,7 @@ type
     ProgramID: string;
     MaxShemaNo: uint32;
     Version: string;
-    revision: string;
+    revision: UInt32;
     LastHeartbeat: ttime;
   end;
 
@@ -47,6 +47,22 @@ type
     DeCall: string;
     DeGrid: string;
     DxGrid: string;
+    TxWatchdog: boolean;
+    SubMode: string;
+    FastMode: boolean;
+    SpecialOpMode: UInt8;   // 数値 (quint8) 	モード	概要
+                            // 0	None	通常運用
+                            // 1	FT8 DXpedition	Foxモード (DXpedition運用)
+                            // 2	FT8 DXpedition	Houndモード (Hound運用)
+                            // 3	Field Day	ARRL Field Dayコンテスト
+                            // 4	Contest	一般コンテスト
+                            // 5	Q65	Q65 Special Mode
+                            // 6	Echo	エコー探索
+                            // 7	WW Digi	WW Digiコンテスト
+    FreqTolerance: UInt32;
+    TRPeriod: UInt32;
+    ConfigName: string;
+    TxMessage: string;
   end;
 
   TWSJTXDecodeMessage = class(TWSJTXMessage)
@@ -83,6 +99,12 @@ type
     Comments: string;
     Name: string;
     DateTimeOn: TDateTIme;
+    OpCall: string;
+    MyCall: string;
+    MyGrid: string;
+    ExchangeSent: string;
+    ExchangeReceived: string;
+    AdifPropMode: String;
   end;
 
   TWSJTXCloseMessage = class(TWSJTXMessage)
@@ -506,7 +528,7 @@ begin
     ProgramID     := ReadString(Bytes, Pos);
     MaxShemaNo    := ReadUInt32BE(Bytes, Pos);
     Version       := ReadString(Bytes, Pos);
-    revision      := ReadString(Bytes, Pos);
+    revision      := ReadUInt32BE(Bytes, Pos);
 
     LastHeartbeat := Time();
     end;
@@ -542,6 +564,15 @@ begin
     DeCall := ReadString(Bytes, Pos);      // My Callsign
     DeGrid := ReadString(Bytes, Pos);      // My Grid Square
     DxGrid := ReadString(Bytes, Pos);      // Opponent's grid square
+
+    TxWatchdog      := ReadBoolean(Bytes, Pos);
+    SubMode         := ReadString(Bytes, Pos);
+    FastMode        := ReadBoolean(Bytes, Pos);
+    SpecialOpMode   := ReadUInt8(Bytes, Pos);
+    FreqTolerance   := ReadUInt32be(Bytes, Pos);
+    TRPeriod        := ReadUInt32be(Bytes, Pos);
+    ConfigName      := ReadString(Bytes, Pos);
+    TxMessage       := ReadString(Bytes, Pos);
     end;
 
   FHexMessage := '';
@@ -633,6 +664,13 @@ begin
     Name          := ReadString(Bytes, Pos);
     DateTimeOn    := QDateTimeToTDateTime(Bytes, Pos);
     DateTimeOn    := TTimeZone.Local.ToLocalTime(DateTimeOn);   // Convert from UTC to JST
+    OpCall        := ReadString(Bytes, Pos);
+    MyCall        := ReadString(Bytes, Pos);
+    MyGrid        := ReadString(Bytes, Pos);
+    ExchangeSent  := ReadString(Bytes, Pos);
+    ExchangeReceived  := ReadString(Bytes, Pos);
+    AdifPropMode  := ReadString(Bytes, Pos);
+
     end;
   FHexMessage := '';
   if HexMessageEnable then
@@ -708,14 +746,15 @@ var
 begin
   Move(Bytes[Pos], Len, 4);
   Len := ntohl(Len);
-  if Len = -1 then
+  if Len < 0  then     // 文字列長さがFFFFFFFFの時
     begin
+    Inc(Pos, 4);
     result := '';
     exit;
     end;
 
   n := length(Bytes);
-  if pos + 4 + Len > n  then
+  if pos + 4 > n  then
     begin
     result := '';
     exit;
@@ -809,11 +848,11 @@ end;
 
 function TWsjtxUdp.ReadUInt8(const Bytes: TBytes; var Pos: Integer): byte;
 var
-  n: int8;
+  n: int32;
   v: UInt8;
 begin
   n := length(Bytes);
-  if pos > n  then
+  if pos + 1 > n  then
     begin
     ShowMessage('ReadUInt8 Bytes length overflow');
     result := 0;
@@ -909,7 +948,6 @@ begin
   Result := b;
 end;
 
-
 function TWsjtxUdp.ReadAdifElement(Adif: string; Pattern: string): string;
 var
   p: string;
@@ -947,7 +985,7 @@ begin
 
   t := ReadUInt32BE(Bytes, Pos);  // Time in milliseconds
   DT := (d - 2415020.5) + (t / 86400000.0);   // Convert from milliseconds to date and time format
-  dt := DT + 1 + 3/24;                        // Question: Why is it off by 3 hours a day?
+//  dt := DT + 1 + 3/24;                        // Question: Why is it off by 3 hours a day?
   timespec := Bytes[Pos];
   inc (Pos, 1);
 //  offset := Byte(Pos);          // It differs from the QDateTime specification. Offset and TimeZone are not included.

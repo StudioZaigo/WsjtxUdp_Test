@@ -84,6 +84,12 @@ Delphi で扱いやすい形式に変換するためのクラスです。
 
 ---
 
+## 📄 Maintenance
+
+- **ver 1.0.0  1st release 2026-04-08**
+- **ver 1.0.1  Review of message handling 2026-04-13**
+---
+
 ## 📜 License
 
  MIT

@@ -127,7 +127,7 @@ var
 begin
   with WSjtxUdp.WSJTXHeartbeatMessage do
     begin
-    s := Format('Heartbeat--ProgramId:%s Version:%s Revision:%s LastHeartbee:', [ProgramID, Version, Revision]);
+    s := Format('Heartbeat--ProgramId:%s Version:%s Revision:%d LastHeartbee:', [ProgramID, Version, Revision]);
     s := s + FormatDateTime('hh:nn:ss.zzz', LastHeartbeat);
     memo1.Lines.add(s);
     end;
@@ -141,7 +141,13 @@ var
 begin
   with WSjtxUdp.WSJTXStatusMessage do
     begin
-    s := Format('Status--ProgramId:%s Freq:%d Mode:%s DxCall:%s DxGrid:', [ProgramId, DialFreq, Mode, DxCall, DxGrid]);
+    s := Format('Status--ProgramId:%s Freq:%d Mode:%s DxCall:%s DxGrid:%s Report:%s',
+        [ProgramId, DialFreq, Mode, DxCall, DxGrid, Report]);
+    memo1.Lines.add(s);
+    s := '--------Transmitting:' + boolToStr(Transmitting, true) + ' Decoding:'
+        + BoolToStr(Decoding, true) + ' Watchdog:' + BoolToStr(TxWatchdog,true);
+    memo1.Lines.add(s);
+    s := Format('--------Conf Name:%s Tx Message:%s', [ConfigName, TxMessage]);
     memo1.Lines.add(s);
     end;
   AddHexMessage;
@@ -180,7 +186,7 @@ begin
   with WSjtxUdp.WSJTXDecodeMessage do
     begin
     s := format('Decode--ProgramId:%s New:', [ProgramId]);
-    s := s + BoolToStr(NewFlag);
+    s := s + BoolToStr(NewFlag, true);
     s := s + ' Time:' + FormatDateTime('hh:nn:ss.zzz', Time);
     s := s + format(' snr:%d Mode:%s Message:%s', [Snr, Mode, MessageText]);
     memo1.Lines.add(s);
